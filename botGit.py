@@ -18,7 +18,7 @@ def db_execute():  #создание бд, если ее нет и добавл�
     cursor = connect.cursor()
 
     cursor.execute('''CREATE TABLE IF NOT EXISTS glusers
-    (gluser_name TEXT, gluser_id INTEGER)''')
+    (gluser_name TEXT PRIMARY KEY, gluser_id INTEGER)''')
 
     connect.commit()
 
