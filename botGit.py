@@ -31,8 +31,14 @@ def start(message): #обработка сообщений ботом
     elif message.text=="/name":
         botGit.send_message(message.from_user.id, user_name)
     elif message.text=="/score":
+        i=0
         for issue in issue_title:
-            botGit.send_message(message.from_user.id, issue)
+            if issue_user[i]=='None':
+                st=''.join(issue_user[i]) + " - " + ''.join(issue_title[i]) + " - " + ''.join(close_date[i]) + " - " + ''.join(issue_state[i])
+            else: 
+                st=', '.join(issue_user[i]) + " - " + ''.join(issue_title[i]) + " - " + ''.join(close_date[i]) + " - " + ''.join(issue_state[i])
+            botGit.send_message(message.from_user.id, st)
+            i=i+1
     elif message.text=="/help":
         botGit.send_message(message.from_user.id, "/start - начало работы с ботом \n/score - показать issue \n/id поменять айди проекта")
     else: 
@@ -79,15 +85,7 @@ def list_issue(): #обработка и выдача информации по 
             issue_user.append('None')
         issue_title.append(issue.title)   
         issue_state.append(issue.state)
-        close_date.append(issue.updated_at)
-        
-
-    for issue in closed_issues:
-        closed_issue_title.append(issue.title)
-    for issue in issues:
-        print(issue_user[i]," - ",issue_title[i]," - ", close_date[i], " - ", issue_state[i])
-        i=i+1
-        
+        close_date.append(issue.updated_at)    
 
 list_issue()
 
