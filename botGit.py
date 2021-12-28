@@ -10,6 +10,24 @@ issue_title = []
 closed_issue_title = []
 gluser_list=[]
 
+def db_execute():  #создание бд, если ее нет и добавление в нее пользователей, пока не реализовано до конца
+    global gluser_list
+    global user_name
+    global projectId
+    connect = sqlite3.connect('glusers.db')
+    cursor = connect.cursor()
+
+    cursor.execute('''CREATE TABLE IF NOT EXISTS glusers
+    (gluser_name TEXT, gluser_id INTEGER)''')
+
+    connect.commit()
+
+    gluser_list.append(user_name)
+    gluser_list.append(projectId)
+    cursor.execute("INSERT INTO glusers VALUES(?,?);",gluser_list)
+    connect.commit()
+    gluser_list.clear()
+
 gl = gitlab.Gitlab(gitlabUrl, token)  #аутентификация гитлаба, для дальнейшей работы с проектами и issue
 gl.auth()
 
@@ -42,6 +60,7 @@ def get_name (message): #метод получения имени польщов
 def get_url(message): #метод получения токена пользователя
     global projectId
     projectId = message.text
+    db_execute()
     list_issue()
 
 def get_id(message): #метод получения токена пользователя
@@ -49,6 +68,7 @@ def get_id(message): #метод получения токена пользов�
     issue_title.clear()
     closed_issue_title.clear()
     projectId = message.text
+    db_execute()
     list_issue()
 
 def list_issue(): #обработка и выдача информации по закрытым issue в проекте, указанном пользователем
