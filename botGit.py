@@ -1,3 +1,4 @@
+from os import close
 import telebot #Библиотека с тг ботом, гитлабом и бдшками
 import gitlab
 import sqlite3
@@ -5,9 +6,13 @@ import sqlite3
 user_name = ''  #все переменные 
 gitlabUrl= 'https://gitlab.com/'
 token = 'glpat-cDC1Za7UVWJFmTcYhytJ'
-projectId = 32387910
+projectId = 32385489
 issue_title = []
 closed_issue_title = []
+open_date=[]
+issue_state=[]
+issue_user = []
+close_date=[]
 gluser_list=[]
 
 gl = gitlab.Gitlab(gitlabUrl, token)  #аутентификация гитлаба, для дальнейшей работы с проектами и issue
@@ -54,16 +59,39 @@ def get_id(message): #метод получения токена пользов�
 def list_issue(): #обработка и выдача информации по закрытым issue в проекте, указанном пользователем
     global issue_title
     global closed_issue_title
+    global open_date
+    global issue_state
+    global close_date
+    global issue_user
+    assignees_name=[]
+    i=0
+    k=0
     project = gl.projects.get(projectId)
     issues = project.issues.list()
     closed_issues = gl.issues.list(state='closed')
     for issue in issues:
-        issue_title.append(issue.title)
+        if issue.assignees:
+            while (k<len(issue.assignees)):
+                assignees_name.append(issue.assignees[k].get('name'))
+                k=k+1
+            issue_user.append(assignees_name)
+        else:
+            issue_user.append('None')
+        issue_title.append(issue.title)   
+        issue_state.append(issue.state)
+        close_date.append(issue.updated_at)
+        
+
     for issue in closed_issues:
         closed_issue_title.append(issue.title)
+    for issue in issues:
+        print(issue_user[i]," - ",issue_title[i]," - ", close_date[i], " - ", issue_state[i])
+        i=i+1
+        
+
+list_issue()
 
 botGit.polling(none_stop=True, interval=0) #бот чекает пришло ли ему сообщение постоянно
-
 
 
 
