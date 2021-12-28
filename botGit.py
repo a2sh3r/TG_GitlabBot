@@ -45,6 +45,7 @@ def start(message): #обработка сообщений ботом
         issue_state.clear()
         close_date.clear()
         issue_user.clear()
+        closed_issue_user.clear()
         list_issue()
         i=0
         botGit.send_message(message.from_user.id, "Все Issue")
@@ -61,14 +62,13 @@ def start(message): #обработка сообщений ботом
         issue_state.clear()
         close_date.clear()
         issue_user.clear()
+        closed_issue_user.clear()
         list_issue()
         i=0
         l=0
         botGit.send_message(message.from_user.id, "Закрытые Issue")
         while l<len(closed_issue_user):
-            if l == user_name:
-                print(closed_issue_user[l])
-            if issue_user[i]=='None':
+            if closed_issue_user[i]=='None':
                 st=''.join(closed_issue_user[i]) + " - " + ''.join(closed_issue_title[i]) + " - " + ''.join(closed_close_date[i]) 
             else: 
                 st=', '.join(closed_issue_user[i]) + " - " + ''.join(closed_issue_title[i]) + " - " + ''.join(closed_close_date[i])
@@ -76,7 +76,7 @@ def start(message): #обработка сообщений ботом
             i=i+1
             l=l+1
     elif message.text=="/help":
-        botGit.send_message(message.from_user.id, "/start - начало работы с ботом \n/score - показать issue \n/id поменять айди проекта\n/nir вывод отфильтрованных данных по заданию")
+        botGit.send_message(message.from_user.id, "/start - начало работы с ботом \n/score - показать issue \n/id поменять айди проекта\n/nir вывод отфильтрованных данных по заданию\nссылка на инструкцию https://telegra.ph/Kak-polzovatsya-boto-GitQuestBot-12-28")
     else: 
         botGit.send_message(message.from_user.id,"Напиши /help")
 
@@ -142,10 +142,4 @@ def list_issue(): #обработка и выдача информации по 
 
 botGit.polling(none_stop=True, interval=0) #бот чекает пришло ли ему сообщение постоянно
 
-
-
-
-
-
-
-
+ 
