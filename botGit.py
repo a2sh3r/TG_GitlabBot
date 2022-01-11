@@ -74,9 +74,9 @@ def start(message): #обработка сообщений ботом
                 st=st+''.join(closed_issue_user[i]) + " - " + ''.join(closed_issue_title[i]) + " - " + ''.join(closed_close_date[i]+ "\n") 
             else: 
                 st=st+', '.join(closed_issue_user[i]) + " - " + ''.join(closed_issue_title[i]) + " - " + ''.join(closed_close_date[i]+ "\n")
-            botGit.send_message(message.from_user.id, st)
             i=i+1
             l=l+1
+        botGit.send_message(message.from_user.id, st)
     elif message.text=="/help":
         botGit.send_message(message.from_user.id, "/start - начало работы с ботом \n/score - показать issue \n/id поменять айди проекта\n/nir вывод отфильтрованных данных по заданию\nссылка на инструкцию https://telegra.ph/Kak-polzovatsya-boto-GitQuestBot-12-28")
     else: 
