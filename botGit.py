@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from os import close
 import telebot #Библиотека с тг ботом, гитлабом и бдшками
 import gitlab
@@ -32,11 +33,12 @@ def start(message): #обработка сообщений ботом
     issue_state.clear()
     close_date.clear()
     issue_user.clear()
+    st=""
     if message.text == "/start":
         botGit.send_message(message.from_user.id, "Как тебя зовут?")
         botGit.register_next_step_handler(message, get_name)
-    elif message.text=="/id":
-        botGit.register_next_step_handler(message, get_url)
+    elif "/id" in message.text :
+        get_url(message)
     elif message.text=="/name":
         botGit.send_message(message.from_user.id, user_name)
     elif message.text=="/score":
@@ -51,11 +53,11 @@ def start(message): #обработка сообщений ботом
         botGit.send_message(message.from_user.id, "Все Issue")
         for issue in issue_title:
             if issue_user[i]=='None':
-                st=''.join(issue_user[i]) + " - " + ''.join(issue_title[i]) + " - " + ''.join(close_date[i]) + " - " + ''.join(issue_state[i])
+                st= st + ''.join(issue_user[i]) + " - " + ''.join(issue_title[i]) + " - " + ''.join(close_date[i]) + " - " + ''.join(issue_state[i] + "\n")
             else: 
-                st=', '.join(issue_user[i]) + " - " + ''.join(issue_title[i]) + " - " + ''.join(close_date[i]) + " - " + ''.join(issue_state[i])
-            botGit.send_message(message.from_user.id, st)
+                st= st + ', '.join(issue_user[i]) + " - " + ''.join(issue_title[i]) + " - " + ''.join(close_date[i]) + " - " + ''.join(issue_state[i] + "\n")
             i=i+1
+        botGit.send_message(message.from_user.id, st)
     elif message.text=="/nir":
         issue_title.clear()
         closed_issue_title.clear()
@@ -69,9 +71,9 @@ def start(message): #обработка сообщений ботом
         botGit.send_message(message.from_user.id, "Закрытые Issue")
         while l<len(closed_issue_user):
             if closed_issue_user[i]=='None':
-                st=''.join(closed_issue_user[i]) + " - " + ''.join(closed_issue_title[i]) + " - " + ''.join(closed_close_date[i]) 
+                st=st+''.join(closed_issue_user[i]) + " - " + ''.join(closed_issue_title[i]) + " - " + ''.join(closed_close_date[i]+ "\n") 
             else: 
-                st=', '.join(closed_issue_user[i]) + " - " + ''.join(closed_issue_title[i]) + " - " + ''.join(closed_close_date[i])
+                st=st+', '.join(closed_issue_user[i]) + " - " + ''.join(closed_issue_title[i]) + " - " + ''.join(closed_close_date[i]+ "\n")
             botGit.send_message(message.from_user.id, st)
             i=i+1
             l=l+1
@@ -93,7 +95,9 @@ def get_url(message): #метод получения токена пользов
     issue_state.clear()
     close_date.clear()
     issue_user.clear()
-    projectId = message.text
+    new_id = str(message.text)
+    projectId = new_id.replace("/id ", "")
+    print(projectId)
     
 
 
@@ -116,6 +120,7 @@ def list_issue(): #обработка и выдача информации по 
     issues = project.issues.list()
     closed_issues = gl.issues.list(state='closed')
     for issue in issues:
+        print(issue)
         if issue.assignees:
             while (k<len(issue.assignees)):
                 assignees_name.append(issue.assignees[k].get('name'))
@@ -140,6 +145,6 @@ def list_issue(): #обработка и выдача информации по 
             closed_issue_state.append(issue.state)
             closed_close_date.append(issue.updated_at)   
 
+list_issue()
 botGit.polling(none_stop=True, interval=0) #бот чекает пришло ли ему сообщение постоянно
 
- 
